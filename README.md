@@ -30,10 +30,34 @@ The "EventAttendees" table establishes a many-to-many relationship between event
 ### Pledges:
 The "Pledges" table tracks commitments made by donors to contribute specific amounts to certain projects. It includes details such as the pledge amount, pledge date, and references to the donor and project involved.
 
+### Volunteers:
+The "Volunteers" table stores information about individuals who offer their time and skills to support the charity's activities. It includes details such as the volunteer's name, email, phone number, and the date they joined the organization.
+
+### Sponsorships:
+The "Sponsorships" table records sponsorship agreements between donors and projects. It includes details such as the sponsorship amount, start date, end date, and references to the donor and project involved.
+
+### Campaigns:
+The "Campaigns" table contains information about fundraising campaigns organized by the charity. It includes details such as the campaign title, description, start date, and end date.
+
+### Beneficiaries:
+The "Beneficiaries" table records information about individuals who receive aid from the charity. It includes details such as the beneficiary's name, birth date, gender, and the donor associated with their support.
+
 ### Views:
 - **DonationSummaryByProject:** This view summarizes donations per project, showing the project title, description, total number of donations, and the total amount donated.
 - **TotalDonationsByDonor:** This view summarizes donations by each donor, displaying the total number of donations and the total amount donated by each donor.
 - **OrphanDonorDetails:** This view provides details of orphans and their associated donors, including the orphan's first name, last name, age, and the donor's first and last names.
 - **ProjectExpensesSummary:** This view summarizes expenses per project, showing the project title, total number of expenses, and the total amount spent.
+- **VolunteerSummary:** This view provides a summary of volunteers, including their name, email, phone number, and the date they joined the organization.
+- **SponsorshipSummary:** This view summarizes sponsorships, including the sponsorship amount, start date, end date, and the names of the sponsor and the project.
+- **CampaignSummary:** This view summarizes campaigns, including the campaign title, description, start date, and end date.
+- **BeneficiarySummary:** This view provides a summary of beneficiaries, including their name, birth date, and gender.
 
-Overall, this database provides a comprehensive platform for managing the activities and resources of a charity organization, including donor management, project tracking, staff management, expense tracking, and event organization.
+### Stored Procedures:
+- **InsertDonation:** Inserts a new donation into the "Donations" table.
+- **GetDonationSummary:** Retrieves a summary of donations grouped by project.
+- **InsertVolunteer:** Inserts a new volunteer into the "Volunteers" table.
+- **InsertSponsorship:** Inserts a new sponsorship into the "Sponsorships" table.
+- **InsertCampaign:** Inserts a new campaign into the "Campaigns" table.
+- **InsertBeneficiary:** Inserts a new beneficiary into the "Beneficiaries" table.
+
+Overall, this database provides a comprehensive platform for managing the activities and resources of a charity organization, including donor management, project tracking, staff management, expense tracking, event organization, and volunteer coordination.
