@@ -52,12 +52,12 @@ The "Beneficiaries" table records information about individuals who receive aid 
 - **CampaignSummary:** This view summarizes campaigns, including the campaign title, description, start date, and end date.
 - **BeneficiarySummary:** This view provides a summary of beneficiaries, including their name, birth date, and gender.
 
-### Stored Procedures:
-- **InsertDonation:** Inserts a new donation into the "Donations" table.
-- **GetDonationSummary:** Retrieves a summary of donations grouped by project.
-- **InsertVolunteer:** Inserts a new volunteer into the "Volunteers" table.
-- **InsertSponsorship:** Inserts a new sponsorship into the "Sponsorships" table.
-- **InsertCampaign:** Inserts a new campaign into the "Campaigns" table.
-- **InsertBeneficiary:** Inserts a new beneficiary into the "Beneficiaries" table.
+Stored Procedures:
+-- InsertDonation: Adds a new donation record to the "Donations" table.
+-- GetDonationSummary: Fetches a summary of donations grouped by project.
+-- InsertVolunteer: Registers a new volunteer in the "Volunteers" table.
+-- InsertSponsorship: Records a new sponsorship entry in the "Sponsorships" table.
+-- InsertCampaign: Logs a new campaign entry in the "Campaigns" table.
+-- InsertBeneficiary: Enters a new beneficiary record into the "Beneficiaries" table.
 
 Overall, this database provides a comprehensive platform for managing the activities and resources of a charity organization, including donor management, project tracking, staff management, expense tracking, event organization, and volunteer coordination.
