@@ -1,4 +1,4 @@
--- Full Backup Job
+-- Full Backup 
 
 USE msdb;
 GO
@@ -19,7 +19,7 @@ EXEC dbo.sp_add_jobstep
     @retry_interval = 5;
 GO
 
--- Differential Backup Job 
+-- Differential Backup 
 
 USE msdb;
 GO
