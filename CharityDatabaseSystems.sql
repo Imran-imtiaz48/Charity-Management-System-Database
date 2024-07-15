@@ -7,7 +7,7 @@ CONTAINMENT = NONE
 ON  PRIMARY 
 ( 
     NAME = N'CharityDB', 
-    FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS03\MSSQL\DATA\CharityDB.mdf', 
+    FILENAME = N'C:\.mdf', 
     SIZE = 8192KB, 
     MAXSIZE = UNLIMITED, 
     FILEGROWTH = 65536KB 
@@ -15,7 +15,7 @@ ON  PRIMARY
 LOG ON 
 ( 
     NAME = N'CharityDB_log', 
-    FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS03\MSSQL\DATA\CharityDB_log.ldf', 
+    FILENAME = N'C:\.ldf', 
     SIZE = 8192KB, 
     MAXSIZE = 2048GB, 
     FILEGROWTH = 65536KB 
