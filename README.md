@@ -1,4 +1,4 @@
-The database aims to streamline operations for a charity organization, overseeing donors, projects, donations, staff, expenses, events, and their interconnections.
+The database is designed to optimize operations for a charity organization, managing donors, projects, donations, staff, expenses, events, and their interconnected relationships.
 
 ### Donors:
 The "Donors" table stores information about individuals or entities who contribute funds or resources to the charity organization. It includes details such as the donor's name, email, and phone number.
