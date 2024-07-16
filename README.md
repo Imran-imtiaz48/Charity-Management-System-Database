@@ -60,4 +60,4 @@ Stored Procedures:
 -- InsertCampaign: Logs a new campaign entry in the "Campaigns" table.
 -- InsertBeneficiary: Enters a new beneficiary record into the "Beneficiaries" table.
 
-In summary, this database offers a comprehensive platform for overseeing the operations and resources of a charity organization. It encompasses donor management, project tracking, staff oversight, expense monitoring, event planning, and volunteer coordination.
+In essence, this database provides a holistic platform to manage operations and resources within a charity organization. It includes donor management, project tracking, staff supervision, expense monitoring, event planning, and volunteer coordination.
