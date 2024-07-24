@@ -1,4 +1,4 @@
-This relational database system is designed to streamline operations for a charitable organization. It facilitates comprehensive management of donors, projects, donations, staff, expenses, and events, while fostering clear visibility into their interconnected relationships.
+This relational database system is designed to optimize operations for a charitable organization. It enables efficient management of donors, projects, donations, staff, expenses, and events, providing clear visibility into their interconnected relationships.
 
 ### Donors:
 The "Donors" table stores information about individuals or entities who contribute funds or resources to the charity organization. It includes details such as the donor's name, email, and phone number.
