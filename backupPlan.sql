@@ -1,4 +1,4 @@
--- Full Backups
+-- Full Backup
 
 USE msdb;
 GO
