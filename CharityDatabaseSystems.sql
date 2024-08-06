@@ -1,7 +1,7 @@
 ﻿USE [master]
 GO
 
--- Create CharityDB Database
+-- Create CharityDB Databases
 CREATE DATABASE [CharityDB]
 CONTAINMENT = NONE
 ON  PRIMARY 
