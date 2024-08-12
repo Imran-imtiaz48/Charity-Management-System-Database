@@ -1,4 +1,4 @@
--- Full Backup Job Setup
+-- Full Backup Job
 
 USE msdb;
 GO
