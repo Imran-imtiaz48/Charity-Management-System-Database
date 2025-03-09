@@ -19,8 +19,7 @@ LOG ON
     SIZE = 8192KB,
     MAXSIZE = 2048GB,
     FILEGROWTH = 65536KB
-)
-WITH CATALOG_COLLATION = DATABASE_DEFAULT;
+);
 GO
 
 -- Set Compatibility Level
@@ -31,21 +30,31 @@ GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 BEGIN
     EXEC [CharityDB].[dbo].[sp_fulltext_database] @action = 'enable';
-END
+END;
 GO
 
 -- Configure Database Settings
 ALTER DATABASE [CharityDB] SET AUTO_CLOSE OFF;
 ALTER DATABASE [CharityDB] SET AUTO_SHRINK OFF;
-ALTER DATABASE [CharityDB] SET RECOVERY SIMPLE;
+ALTER DATABASE [CharityDB] SET RECOVERY FULL;
 ALTER DATABASE [CharityDB] SET MULTI_USER;
 ALTER DATABASE [CharityDB] SET PAGE_VERIFY CHECKSUM;
 ALTER DATABASE [CharityDB] SET TARGET_RECOVERY_TIME = 60 SECONDS;
 ALTER DATABASE [CharityDB] SET AUTO_UPDATE_STATISTICS ON;
-ALTER DATABASE [CharityDB] SET QUERY_STORE = OFF;
+ALTER DATABASE [CharityDB] SET QUERY_STORE = ON;
 GO
 
 USE [CharityDB];
+GO
+
+-- Create Donors Table
+CREATE TABLE [dbo].[Donors] (
+    [DonorID] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [FirstName] NVARCHAR(50) NOT NULL,
+    [LastName] NVARCHAR(50) NOT NULL,
+    [Email] NVARCHAR(100) NOT NULL UNIQUE,
+    [PhoneNumber] NVARCHAR(15) NULL
+);
 GO
 
 -- Create Projects Table
@@ -53,8 +62,8 @@ CREATE TABLE [dbo].[Projects] (
     [ProjectID] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     [Title] NVARCHAR(100) NOT NULL,
     [Description] NVARCHAR(MAX) NULL,
-    [StartDate] DATE NULL,
-    [EndDate] DATE NULL
+    [StartDate] DATE NOT NULL,
+    [EndDate] DATE NULL CHECK (EndDate >= StartDate)
 );
 GO
 
@@ -63,8 +72,12 @@ CREATE TABLE [dbo].[Donations] (
     [DonationID] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     [DonorID] INT NOT NULL,
     [ProjectID] INT NOT NULL,
-    [Amount] DECIMAL(10, 2) NOT NULL,
-    [DonationDate] DATE NOT NULL
+    [Amount] DECIMAL(10, 2) NOT NULL CHECK (Amount > 0),
+    [DonationDate] DATE NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Donations_Donors FOREIGN KEY ([DonorID])
+        REFERENCES [dbo].[Donors] ([DonorID]) ON DELETE CASCADE,
+    CONSTRAINT FK_Donations_Projects FOREIGN KEY ([ProjectID])
+        REFERENCES [dbo].[Projects] ([ProjectID]) ON DELETE CASCADE
 );
 GO
 
@@ -73,20 +86,15 @@ CREATE TABLE [dbo].[Volunteers] (
     [VolunteerID] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     [FirstName] NVARCHAR(50) NOT NULL,
     [LastName] NVARCHAR(50) NOT NULL,
-    [Email] NVARCHAR(100) NOT NULL,
+    [Email] NVARCHAR(100) NOT NULL UNIQUE,
     [PhoneNumber] NVARCHAR(15) NULL,
-    [JoinedDate] DATE NOT NULL
+    [JoinedDate] DATE NOT NULL DEFAULT GETDATE()
 );
 GO
 
--- Add Foreign Key Constraints
-ALTER TABLE [dbo].[Donations]
-ADD CONSTRAINT FK_Donations_Donors FOREIGN KEY ([DonorID])
-REFERENCES [dbo].[Donors] ([DonorID]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[Donations]
-ADD CONSTRAINT FK_Donations_Projects FOREIGN KEY ([ProjectID])
-REFERENCES [dbo].[Projects] ([ProjectID]) ON DELETE CASCADE;
+-- Add Indexes for Performance Optimization
+CREATE INDEX IDX_Donations_DonorID ON [dbo].[Donations] ([DonorID]);
+CREATE INDEX IDX_Donations_ProjectID ON [dbo].[Donations] ([ProjectID]);
 GO
 
 -- Create Donation Summary View
@@ -95,7 +103,7 @@ SELECT
     p.ProjectID,
     p.Title AS ProjectTitle,
     COUNT(d.DonationID) AS TotalDonations,
-    SUM(d.Amount) AS TotalAmountDonated
+    COALESCE(SUM(d.Amount), 0) AS TotalAmountDonated
 FROM 
     [dbo].[Projects] p
 LEFT JOIN 
@@ -104,7 +112,7 @@ GROUP BY
     p.ProjectID, p.Title;
 GO
 
--- Create Stored Procedure to Insert Donation
+-- Create Stored Procedure to Insert Donation with Validations
 CREATE PROCEDURE [dbo].[InsertDonation]
     @DonorID INT,
     @ProjectID INT,
@@ -114,10 +122,24 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
+        -- Validate Donor
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[Donors] WHERE [DonorID] = @DonorID)
+        BEGIN
+            THROW 50000, 'Invalid DonorID. Donor does not exist.', 1;
+        END
+
+        -- Validate Project
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[Projects] WHERE [ProjectID] = @ProjectID)
+        BEGIN
+            THROW 50001, 'Invalid ProjectID. Project does not exist.', 1;
+        END
+
+        -- Insert Donation
         INSERT INTO [dbo].[Donations] ([DonorID], [ProjectID], [Amount], [DonationDate])
         VALUES (@DonorID, @ProjectID, @Amount, @DonationDate);
     END TRY
     BEGIN CATCH
+        -- Log Error and Rethrow
         THROW;
     END CATCH;
 END;
@@ -132,7 +154,7 @@ BEGIN
         p.ProjectID,
         p.Title AS ProjectTitle,
         COUNT(d.DonationID) AS TotalDonations,
-        SUM(d.Amount) AS TotalAmountDonated
+        COALESCE(SUM(d.Amount), 0) AS TotalAmountDonated
     FROM 
         [dbo].[Projects] p
     LEFT JOIN 
